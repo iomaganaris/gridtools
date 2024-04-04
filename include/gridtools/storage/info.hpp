@@ -123,6 +123,13 @@ namespace gridtools {
                     return index_from_tuple(tuple(indices...));
                 }
 
+                template <class Indices,
+                    std::enable_if_t<ndims == 2 && std::conjunction<std::is_convertible<Indices, int_t>>::value,
+                        int> = 0>
+                GT_FUNCTION auto index(Indices &&indice0, Indices &&indice1) const {
+                    return indice0*strides()[0] + indice1*strides()[1];
+                }
+
                 template <class Indices>
                 GT_FUNCTION auto index_from_tuple(Indices &&indices) const {
                     using namespace tuple_util::host_device;
