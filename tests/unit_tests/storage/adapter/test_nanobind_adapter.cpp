@@ -22,7 +22,7 @@ TEST(NanobindAdapter, DataDynStrides) {
     const auto data = reinterpret_cast<void *>(0xDEADBEEF);
     constexpr int ndim = 2;
     constexpr std::array<std::size_t, ndim> shape = {3, 4};
-    constexpr std::array<std::intptr_t, ndim> strides = {1, 3};
+    constexpr std::array<std::int64_t, ndim> strides = {1, 3};
     nb::ndarray<int, nb::shape<nb::any, nb::any>> ndarray{data, ndim, shape.data(), nb::handle{}, strides.data()};
 
     const auto sid = gridtools::nanobind::as_sid(ndarray);
@@ -39,7 +39,7 @@ TEST(NanobindAdapter, StaticStridesMatch) {
     const auto data = reinterpret_cast<void *>(0xDEADBEEF);
     constexpr int ndim = 2;
     constexpr std::array<std::size_t, ndim> shape = {3, 4};
-    constexpr std::array<std::intptr_t, ndim> strides = {1, 3};
+    constexpr std::array<std::int64_t, ndim> strides = {1, 3};
     nb::ndarray<int, nb::shape<nb::any, nb::any>> ndarray{data, ndim, shape.data(), nb::handle{}, strides.data()};
 
     const auto sid = gridtools::nanobind::as_sid(ndarray, gridtools::nanobind::stride_spec<1, nanobind::any>{});
@@ -53,7 +53,7 @@ TEST(NanobindAdapter, StaticStridesMismatch) {
     const auto data = reinterpret_cast<void *>(0xDEADBEEF);
     constexpr int ndim = 2;
     constexpr std::array<std::size_t, ndim> shape = {3, 4};
-    constexpr std::array<std::intptr_t, ndim> strides = {1, 3};
+    constexpr std::array<std::int64_t, ndim> strides = {1, 3};
     nb::ndarray<int, nb::shape<nb::any, nb::any>> ndarray{data, ndim, shape.data(), nb::handle{}, strides.data()};
 
     EXPECT_THROW(

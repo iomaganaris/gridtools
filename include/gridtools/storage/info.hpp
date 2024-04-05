@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include <cassert>
 #include <cstddef>
 #include <type_traits>
@@ -126,12 +128,21 @@ namespace gridtools {
                 template <class Indices,
                     std::enable_if_t<ndims == 2 && std::conjunction<std::is_convertible<Indices, int_t>>::value,
                         int> = 0>
-                GT_FUNCTION auto index(Indices &&indice0, Indices &&indice1) const {
+                GT_FUNCTION auto index(Indices indice0, Indices indice1) const {
+                    // std::cout << "specialized index 2" << std::endl;
                     return indice0*strides()[0] + indice1*strides()[1];
                 }
 
+                template <class Indices,
+                    std::enable_if_t<ndims == 1 && std::conjunction<std::is_convertible<Indices, int_t>>::value,
+                        int> = 0>
+                GT_FUNCTION auto index(Indices indice0) const {
+                    // std::cout << "specialized index 1" << std::endl;
+                    return indice0;
+                }
+
                 template <class Indices>
-                GT_FUNCTION auto index_from_tuple(Indices &&indices) const {
+                GT_FUNCTION auto index_from_tuple(Indices indices) const {
                     using namespace tuple_util::host_device;
 #ifndef NDEBUG
                     tuple_util::host_device::for_each(
@@ -142,6 +153,7 @@ namespace gridtools {
                         indices,
                         native_lengths());
 #endif
+                    // std::cout << "index_from_tuple" << std::endl;
                     return fold([](auto l, auto r) { return l + r; },
                         transform(
                             [](auto i, auto s) { return i * s; }, std::forward<Indices>(indices), native_strides()));
