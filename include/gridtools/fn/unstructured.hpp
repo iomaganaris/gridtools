@@ -66,7 +66,7 @@ namespace gridtools::fn {
             Ptr m_ptr;
             Strides const &m_strides;
             Domain const &m_domain;
-            std::int64_t m_index;
+            int m_index;
         };
 
         template <class Tag, class Ptr, class Strides, class Domain>
