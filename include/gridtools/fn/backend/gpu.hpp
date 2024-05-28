@@ -94,7 +94,7 @@ namespace gridtools::fn::backend {
             class Fun,
             class NDims = tuple_util::size<Sizes>,
             class SizeKeys = get_keys<Sizes>>
-        __global__ void kernel(Sizes sizes, PtrHolder ptr_holder, Strides strides, Fun fun) {
+        __global__ void __launch_bounds__(256) kernel(Sizes sizes, PtrHolder ptr_holder, Strides strides, Fun fun) {
             auto thread_idx = global_thread_index<BlockSizes, Sizes>();
             if (!in_domain(thread_idx, sizes))
                 return;
