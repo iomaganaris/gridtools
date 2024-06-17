@@ -69,14 +69,18 @@ namespace gridtools::fn {
             int m_index;
         };
 
+#if !defined(GT_FN_ASSUME_CAN_DEREF)
         template <class Tag, class Ptr, class Strides, class Domain>
         GT_FUNCTION constexpr bool can_deref(iterator<Tag, Ptr, Strides, Domain> const &it) {
             return it.m_index != -1;
         }
+#endif
 
         template <class Tag, class Ptr, class Strides, class Domain>
         GT_FUNCTION constexpr auto deref(iterator<Tag, Ptr, Strides, Domain> const &it) {
+#if defined(GT_FN_ASSUME_CAN_DEREF)
             assert(can_deref(it));
+#endif
             decltype(auto) stride = host_device::at_key<Tag>(sid::get_stride<dim::horizontal>(it.m_strides));
             return *sid::shifted(it.m_ptr, stride, it.m_index);
         }
@@ -84,7 +88,11 @@ namespace gridtools::fn {
         template <class Tag, class Ptr, class Strides, class Domain, class Conn, class Offset>
         GT_FUNCTION constexpr auto horizontal_shift(iterator<Tag, Ptr, Strides, Domain> const &it, Conn, Offset) {
             auto const &table = host_device::at_key<Conn>(it.m_domain.m_tables);
-            auto new_index = it.m_index == -1 ? -1 : get<Offset::value>(neighbor_table::neighbors(table, it.m_index));
+#if defined(GT_FN_ASSUME_CAN_DEREF)
+            const auto new_index = get<Offset::value>(neighbor_table::neighbors(table, it.m_index));
+#else
+            const auto new_index = it.m_index == -1 ? -1 : get<Offset::value>(neighbor_table::neighbors(table, it.m_index));
+#endif
             auto shifted = it;
             shifted.m_index = new_index;
             return shifted;
@@ -170,7 +178,9 @@ namespace gridtools::fn {
         }
     } // namespace unstructured_impl_
 
+#if !defined(GT_FN_ASSUME_CAN_DEREF)
     using unstructured_impl_::can_deref;
+#endif
     using unstructured_impl_::connectivity;
     using unstructured_impl_::deref;
     using unstructured_impl_::shift;

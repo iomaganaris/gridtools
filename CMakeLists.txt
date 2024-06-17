@@ -29,6 +29,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/public" "${CMAKE_
 set(CMAKE_EXPORT_NO_PACKAGE_REGISTRY ON CACHE BOOL "")
 mark_as_advanced(CMAKE_EXPORT_NO_PACKAGE_REGISTRY)
 
+option(GT_FN_ASSUME_CAN_DEREF "Assume that it's possible to deref all the field indexes in fn unstructured backend" OFF)
+
+if (GT_FN_ASSUME_CAN_DEREF)
+    add_compile_definitions("-DGT_FN_ASSUME_CAN_DEREF")
+endif()
+
 # User setting GT_CLANG_CUDA_MODE: decide if Clang-CUDA or NVCC
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(GT_CLANG_CUDA_MODE "AUTO" CACHE STRING
