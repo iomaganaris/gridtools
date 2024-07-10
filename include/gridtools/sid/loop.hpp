@@ -44,7 +44,8 @@ namespace gridtools {
                         if (m_num_steps <= 0)
                             return;
                         auto &&stride = get_stride<Key>(strides);
-                        for (T i = 0; i < m_num_steps; ++i) {
+                        //#pragma unroll
+for (T i = 0; i < m_num_steps; ++i) {
                             m_fun(ptr, strides);
                             shift(ptr, stride, m_step);
                         }
@@ -119,7 +120,8 @@ namespace gridtools {
                         if (m_num_steps <= 0)
                             return;
                         auto &&stride = get_stride<Key>(strides);
-                        for (T i = 0; i < m_num_steps; ++i) {
+                        //#pragma unroll
+for (T i = 0; i < m_num_steps; ++i) {
                             m_fun(ptr, strides);
                             shift(ptr, stride, integral_constant<T, Step>{});
                         }
@@ -190,7 +192,8 @@ namespace gridtools {
                     template <class Ptr, class Strides>
                     void GT_FUNCTION operator()(Ptr &&ptr, const Strides &strides) const {
                         assert(m_num_steps >= 0);
-                        for (T i = 0; i < m_num_steps; ++i)
+                        //#pragma unroll
+for (T i = 0; i < m_num_steps; ++i)
                             m_fun(std::forward<Ptr>(ptr), strides);
                     }
                 };
@@ -254,6 +257,7 @@ namespace gridtools {
                     void GT_FUNCTION operator()(Ptr &&ptr, const Strides &strides) const {
                         auto &&stride = get_stride<Key>(strides);
                         // TODO(anstaf): to figure out if for_each<make_indices_c<NumSteps>>(...) produces better code.
+                        //#pragma unroll
                         for (T i = 0; i < NumSteps; ++i) {
                             m_fun(ptr, strides);
                             shift(ptr, stride, m_step);
@@ -321,7 +325,8 @@ namespace gridtools {
                     template <class Ptr, class Strides>
                     void GT_FUNCTION operator()(Ptr &&ptr, const Strides &strides) const {
                         auto &&stride = get_stride<Key>(strides);
-                        for (T i = 0; i < (T)NumSteps; ++i) {
+                        //#pragma unroll
+for (T i = 0; i < (T)NumSteps; ++i) {
                             m_fun(ptr, strides);
                             shift(ptr, stride, integral_constant<T, Step>{});
                         }
@@ -384,7 +389,8 @@ namespace gridtools {
 
                     template <class Ptr, class Strides>
                     void GT_FUNCTION operator()(Ptr &&ptr, Strides const &strides) const {
-                        for (T i = 0; i < (T)NumSteps; ++i)
+                        //#pragma unroll
+for (T i = 0; i < (T)NumSteps; ++i)
                             m_fun(ptr, strides);
                     }
                 };
