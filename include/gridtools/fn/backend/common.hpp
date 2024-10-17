@@ -37,7 +37,7 @@ namespace gridtools::fn::backend {
                 [&](auto outer, auto dim) {
                     using unroll_factor = element_at<decltype(dim), UnrollFactors>;
                     return [outer = std::move(outer),
-                               inner = sid::make_unrolled_loop<decltype(dim), unroll_factor::value>(
+                               inner = sid::make_unrolled_loop<decltype(dim), 1>(
                                    host_device::at_key<decltype(dim)>(sizes))](
                                auto &&...args) { return outer(inner(std::forward<decltype(args)>(args)...)); };
                 },
